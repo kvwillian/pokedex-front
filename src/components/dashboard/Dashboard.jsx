@@ -2,32 +2,27 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable no-else-return */
 import { useState, useEffect } from "react";
-import axios from 'axios';
 import { Container, Form, CardContainer } from "./style";
 import inputSearchImg from '../../assets/input-search-bg.png';
 import { Card } from "../card/Card";
-
+import { fetchPokemons } from "../../services/api";
 
 export function Dashboard() {
   const [search, setSearch] = useState("");
   const [pokemonList, setPokemonList] = useState([]);
-  const baseURL = 'https://raw.githubusercontent.com/Biuni/PokemonGO-Pokedex/master/pokedex.json';
 
   const handleSearch = (e) => {
     setSearch(e.target.value);
   }
 
   useEffect(() => {
-    axios.get(baseURL)
-      .then(response => {
-        setPokemonList(response.data.pokemon);
-        console.log(pokemonList)
-      })
-      .catch(error => {
-        console.log(error);
-      });
-    }, []);
+    const fetchPokemonList = async () => {
+      const res = await fetchPokemons();
+      setPokemonList(await res);
+    }
 
+    fetchPokemonList();
+  }, []);
 
   return (
     <>
