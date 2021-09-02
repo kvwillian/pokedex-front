@@ -2,10 +2,10 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable no-else-return */
 import { useState, useEffect } from "react";
+import axios from "axios";
 import { Container, Form, CardContainer } from "./style";
 import inputSearchImg from '../../assets/input-search-bg.png';
 import { Card } from "../card/Card";
-import { fetchPokemons } from "../../services/api";
 
 export function Dashboard() {
   const [search, setSearch] = useState("");
@@ -16,12 +16,10 @@ export function Dashboard() {
   }
 
   useEffect(() => {
-    const fetchPokemonList = async () => {
-      const res = await fetchPokemons();
-      setPokemonList(await res);
-    }
-
-    fetchPokemonList();
+    axios.get('https://raw.githubusercontent.com/Biuni/PokemonGO-Pokedex/master/pokedex.json').then(res => {
+      const pokemons = res.data.pokemon;
+      setPokemonList(pokemons);
+    })
   }, []);
 
   return (
@@ -37,7 +35,7 @@ export function Dashboard() {
               <input
                 value={search}
                 onChange={handleSearch}
-                placeholder="Busque por pokémon"
+                placeholder="Busque por pokemon"
               />
               <button type="submit" aria-label="Botão de busca">
                 <img src={inputSearchImg} alt="Busca" />
@@ -64,7 +62,6 @@ export function Dashboard() {
             ))}
         </CardContainer>
       </Container>
-
     </>
   );
 }
